@@ -3,7 +3,7 @@ from mpmath import mp
 import time
 from random import random
 
-# Page configuration
+# Configure page
 st.set_page_config(page_title="Smart Pi Calculator", page_icon="🔢")
 st.title("🔢 Smart Pi Calculator")
 
@@ -11,7 +11,7 @@ st.title("🔢 Smart Pi Calculator")
 st.sidebar.header("Settings")
 digits = st.sidebar.slider("How many digits of π do you want?", 1, 300, 50)
 
-# Auto method selection
+# Auto-selection logic
 if digits <= 10:
     method = "Machin"
 elif digits <= 40:
@@ -21,19 +21,19 @@ else:
 
 st.sidebar.markdown(f"**Auto-selected method:** `{method}`")
 
-# Optional manual comparison
+# Manual method toggle
 enable_manual = st.sidebar.checkbox("🧪 Compare with custom method")
 if enable_manual:
     manual_method = st.sidebar.selectbox("Select a method to compare:", ["Leibniz", "Machin", "Chudnovsky", "Monte Carlo"])
 else:
     manual_method = None
 
-# Improved internal precision and reference
-internal_buffer = max(10, digits // 2)
+# Increase precision buffer
+internal_buffer = max(50, digits // 2)
 mp.dps = digits + internal_buffer
 pi_reference = str(mp.pi)
 
-# Highlighting function
+# Highlight incorrect digits
 def highlight_pi_difference(user_pi, reference_pi, digits):
     result_html = '<code>'
     for i in range(digits + 2):  # Include "3."
@@ -89,37 +89,37 @@ def monte_carlo_pi(samples):
             inside += 1
     return mp.mpf(4 * inside / samples)
 
-# Smart mode result
+# Smart result section
 st.subheader("🎯 Smart Mode Result")
 with st.spinner("Calculating..."):
     start = time.time()
     if method == "Leibniz":
-        terms = digits * 200
+        terms = digits * 800
         pi = leibniz_pi(terms)
     elif method == "Machin":
-        terms = digits * 2
+        terms = digits * 12
         pi = machin_pi(terms)
     else:
-        terms = digits // 14 + 5
+        terms = digits // 14 + 20
         pi = chudnovsky_pi(terms)
     elapsed = time.time() - start
     pi_str = str(pi)[:digits + 10]
     st.markdown(highlight_pi_difference(pi_str, pi_reference, digits), unsafe_allow_html=True)
     st.success(f"Smart method completed in {elapsed:.4f} seconds.")
 
-# Manual comparison
+# Manual method comparison
 if enable_manual:
     st.subheader(f"🧪 Manual Comparison: {manual_method}")
     with st.spinner("Calculating..."):
         start = time.time()
         if manual_method == "Leibniz":
-            terms = digits * 200
+            terms = digits * 800
             pi_manual = leibniz_pi(terms)
         elif manual_method == "Machin":
-            terms = digits * 2
+            terms = digits * 12
             pi_manual = machin_pi(terms)
         elif manual_method == "Chudnovsky":
-            terms = digits // 14 + 5
+            terms = digits // 14 + 20
             pi_manual = chudnovsky_pi(terms)
         elif manual_method == "Monte Carlo":
             pi_manual = monte_carlo_pi(digits * 10000)
@@ -137,5 +137,5 @@ if enable_manual:
     elif manual_method == "Monte Carlo":
         st.info("🎲 **Monte Carlo**: Estimates π using random points in a circle. Low precision, but fun and visual.")
 
-# Footer note
+# Footer
 st.caption("🧮 All results are compared to `mpmath.pi`, accurate to over 200 digits.")
