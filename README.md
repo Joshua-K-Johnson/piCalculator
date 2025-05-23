@@ -44,14 +44,15 @@ A Python + Streamlit web app that calculates the value of π (Pi) to up to 300 d
 ```bash
 pip install streamlit mpmath
 streamlit run app.py
+```
+---
 
 ## 📂 Project Structure
 
-```
+
 ├── app.py              # Main Streamlit app
 ├── requirements.txt    # Dependencies
 ├── README.md           # You’re here
-```
 
 ---
 
