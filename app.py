@@ -29,7 +29,7 @@ else:
     manual_method = None
 
 # Increase precision buffer
-internal_buffer = max(50, digits // 2)
+internal_buffer = max(100, digits // 2)
 mp.dps = digits + internal_buffer
 pi_reference = str(mp.pi)
 
