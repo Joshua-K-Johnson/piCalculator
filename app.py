@@ -3,15 +3,15 @@ from mpmath import mp
 import time
 from random import random
 
-# Configure Streamlit page
+# Configure page
 st.set_page_config(page_title="Smart Pi Calculator", page_icon="🔢")
 st.title("🔢 Smart Pi Calculator")
 
-# Sidebar Input
+# Sidebar input
 st.sidebar.header("Settings")
 digits = st.sidebar.slider("How many digits of π do you want?", 1, 200, 50)
 
-# Auto-selection logic
+# Auto method selection
 if digits <= 10:
     method = "Machin"
 elif digits <= 40:
@@ -29,9 +29,26 @@ else:
     manual_method = None
 
 # Set precision
-mp.dps = digits + 5
+mp.dps = 205
+pi_reference = str(mp.pi)
 
-# Define Pi calculation methods
+# Define highlighting function
+def highlight_pi_difference(user_pi, reference_pi, digits):
+    result_html = '<code>'
+    for i in range(digits + 2):  # include "3."
+        if i >= len(user_pi) or i >= len(reference_pi):
+            result_html += f'<span style="color:gray;">?</span>'
+            break
+        if user_pi[i] == reference_pi[i]:
+            result_html += user_pi[i]
+        else:
+            result_html += f'<span style="color:red;">{user_pi[i]}</span>'
+            result_html += f'<span style="color:gray;">{user_pi[i+1:]}</span>'
+            break
+    result_html += '</code>'
+    return result_html
+
+# Pi calculation methods
 def leibniz_pi(n_terms):
     pi = mp.mpf(0)
     for k in range(n_terms):
@@ -85,10 +102,11 @@ with st.spinner("Calculating..."):
         terms = digits // 14 + 2
         pi = chudnovsky_pi(terms)
     elapsed = time.time() - start
-    st.code(str(pi)[:digits + 2])
+    pi_str = str(pi)[:digits + 10]
+    st.markdown(highlight_pi_difference(pi_str, pi_reference, digits), unsafe_allow_html=True)
     st.success(f"Smart method completed in {elapsed:.4f} seconds.")
 
-# Manual method comparison
+# Manual comparison
 if enable_manual:
     st.subheader(f"🧪 Manual Comparison: {manual_method}")
     with st.spinner("Calculating..."):
@@ -105,7 +123,8 @@ if enable_manual:
         elif manual_method == "Monte Carlo":
             pi_manual = monte_carlo_pi(digits * 10000)
         elapsed_manual = time.time() - start
-        st.code(str(pi_manual)[:digits + 2])
+        pi_str_manual = str(pi_manual)[:digits + 10]
+        st.markdown(highlight_pi_difference(pi_str_manual, pi_reference, digits), unsafe_allow_html=True)
         st.success(f"{manual_method} method completed in {elapsed_manual:.4f} seconds.")
 
     # Method descriptions
