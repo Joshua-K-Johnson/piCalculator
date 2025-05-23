@@ -44,3 +44,30 @@ A Python + Streamlit web app that calculates the value of π (Pi) to up to 300 d
 ```bash
 pip install streamlit mpmath
 streamlit run app.py
+
+## 📂 Project Structure
+
+```
+├── app.py              # Main Streamlit app
+├── requirements.txt    # Dependencies
+├── README.md           # You’re here
+```
+
+---
+
+## 📜 License
+
+MIT License.  
+You are free to use, modify, and distribute this project for personal and commercial purposes with proper attribution.
+
+---
+
+## ✨ Credits
+
+Built by Joshua Johnson
+With inspiration from:
+- Srinivasa Ramanujan
+- The Chudnovsky brothers
+- Professor from Tsinghua SIGS
+
+
