@@ -1,18 +1,16 @@
+# Updated Streamlit app with auto and manual method selection including timing
 import streamlit as st
 from mpmath import mp
 import time
 
-# Page config
 st.set_page_config(page_title="Smart Pi Calculator", page_icon="🔢")
-
-# Title
 st.title("🔢 Smart Pi Calculator")
 
-# Sidebar: User Input
+# Sidebar: User input for digits
 st.sidebar.header("Settings")
 digits = st.sidebar.slider("How many digits of π do you want?", 1, 200, 50)
 
-# Automatically choose method
+# Auto-method selection
 if digits <= 10:
     method = "Machin"
 elif digits <= 40:
@@ -20,12 +18,12 @@ elif digits <= 40:
 else:
     method = "Chudnovsky"
 
-st.sidebar.write(f"Algorithm chosen: **{method}**")
+st.sidebar.write(f"Auto-selected method: **{method}**")
 
 # Set precision
-mp.dps = digits + 5  # extra buffer to ensure final digit accuracy
+mp.dps = digits + 5
 
-# Pi Calculation Functions
+# Pi Calculation Methods
 def leibniz_pi(n_terms):
     pi = mp.mpf(0)
     for k in range(n_terms):
@@ -57,27 +55,51 @@ def chudnovsky_pi(terms):
         K += 12
     return C / S
 
-# Trigger calculation
-st.subheader("Result")
+def monte_carlo_pi(samples):
+    from random import random
+    inside = 0
+    for _ in range(samples):
+        x, y = random(), random()
+        if x*x + y*y <= 1:
+            inside += 1
+    return mp.mpf(4 * inside / samples)
 
-with st.spinner("Calculating..."):
+# Smart calculation
+st.subheader("🎯 Smart Mode Result")
+with st.spinner("Calculating (smart selection)..."):
     start = time.time()
-    
     if method == "Leibniz":
-        terms = digits * 100  # very slow converging
+        terms = digits * 100
         pi = leibniz_pi(terms)
     elif method == "Machin":
-        terms = digits + 10  # generally safe
+        terms = digits + 10
         pi = machin_pi(terms)
-    elif method == "Chudnovsky":
-        terms = digits // 14 + 2  # ~14 digits per term
+    else:
+        terms = digits // 14 + 2
         pi = chudnovsky_pi(terms)
-    
     elapsed = time.time() - start
-    pi_str = str(pi)[:digits + 2]  # include "3."
-    st.code(pi_str)
+    st.code(str(pi)[:digits + 2])
+    st.success(f"Completed in {elapsed:.4f} seconds")
 
-st.success(f"Done in {elapsed:.4f} seconds ✅")
+# Manual comparison section
+with st.expander("🧪 Compare Algorithms Manually (Optional)"):
+    manual_method = st.selectbox("Choose a method to compare:", ["Leibniz", "Machin", "Chudnovsky", "Monte Carlo"])
+    if st.button("Recalculate with selected method"):
+        with st.spinner("Calculating..."):
+            start = time.time()
+            if manual_method == "Leibniz":
+                terms = digits * 100
+                pi_manual = leibniz_pi(terms)
+            elif manual_method == "Machin":
+                terms = digits + 10
+                pi_manual = machin_pi(terms)
+            elif manual_method == "Chudnovsky":
+                terms = digits // 14 + 2
+                pi_manual = chudnovsky_pi(terms)
+            elif manual_method == "Monte Carlo":
+                pi_manual = monte_carlo_pi(digits * 10000)
+            elapsed_manual = time.time() - start
+            st.code(str(pi_manual)[:digits + 2])
+            st.success(f"{manual_method} took {elapsed_manual:.4f} seconds")
 
-# Optional: Copy/share
-st.caption("Built with 🧠 by [You] using Streamlit & mpmath")
+st.caption("Built with ❤️ using Streamlit & mpmath")
