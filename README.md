@@ -49,11 +49,11 @@ streamlit run app.py
 
 ## 📂 Project Structure
 
-
+```
 ├── app.py              # Main Streamlit app
 ├── requirements.txt    # Dependencies
 ├── README.md           # You’re here
-
+```
 ---
 
 ## 📜 License
