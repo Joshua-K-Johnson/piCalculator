@@ -28,9 +28,11 @@ if enable_manual:
 else:
     manual_method = None
 
-# Set high fixed precision for the reference value
-mp.dps = 350
-pi_reference = str(mp.pi)
+# Fixed 300 place precision for the reference value
+pi_reference = (
+    "3."
+    "14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196"
+)
 
 # Reset precision to a dynamic level for calculation
 internal_buffer = max(100, digits // 2)
