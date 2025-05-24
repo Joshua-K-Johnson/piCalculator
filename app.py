@@ -28,10 +28,14 @@ if enable_manual:
 else:
     manual_method = None
 
-# Increase precision buffer
+# Set high fixed precision for the reference value
+mp.dps = 350
+pi_reference = str(mp.pi)
+
+# Reset precision to a dynamic level for calculation
 internal_buffer = max(100, digits // 2)
 mp.dps = digits + internal_buffer
-pi_reference = str(mp.pi)
+
 
 # Highlight incorrect digits
 def highlight_pi_difference(user_pi, reference_pi, digits):
