@@ -106,7 +106,8 @@ with st.spinner("Calculating..."):
     elif method == "Machin":
         pi = machin_pi(digits * 20)
     else:
-        pi = chudnovsky_pi(digits // 14 + 50)
+        terms = 25  # This should guarantee 350+ digits worth of accuracy
+        pi = chudnovsky_pi(terms)
     elapsed = time.time() - start
     pi_str = nstr(pi, digits + 20)
     st.markdown(highlight_pi_difference(pi_str, pi_reference, digits), unsafe_allow_html=True)
@@ -122,7 +123,7 @@ if enable_manual:
         elif manual_method == "Machin":
             pi_manual = machin_pi(digits * 20)
         elif manual_method == "Chudnovsky":
-            pi_manual = chudnovsky_pi(digits // 14 + 50)
+            pi_manual = chudnovsky_pi(25)
         elif manual_method == "Monte Carlo":
             pi_manual = monte_carlo_pi(digits * 20000)
         elapsed_manual = time.time() - start
