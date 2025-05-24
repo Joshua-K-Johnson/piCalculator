@@ -1,7 +1,7 @@
-# Restored full-featured Streamlit app with 250-digit comparison and manual toggle
+# Full version of app.py with improved red digit highlighting using nstr and extended tail
 
 import streamlit as st
-from mpmath import mp
+from mpmath import mp, nstr
 import time
 from random import random
 
@@ -36,7 +36,7 @@ if enable_manual:
 else:
     manual_method = None
 
-# Precision buffer
+# Set precision for all calculations
 mp.dps = digits + 100
 
 # Highlighting difference from reference
@@ -126,8 +126,7 @@ if enable_manual:
         elif manual_method == "Monte Carlo":
             pi_manual = monte_carlo_pi(digits * 20000)
         elapsed_manual = time.time() - start
-        pi_str_manual = nstr(pi, digits + 20)
-
+        pi_str_manual = nstr(pi_manual, digits + 20)
         st.markdown(highlight_pi_difference(pi_str_manual, pi_reference, digits), unsafe_allow_html=True)
         st.success(f"{manual_method} method completed in {elapsed_manual:.4f} seconds.")
 
