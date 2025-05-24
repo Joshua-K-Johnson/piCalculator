@@ -75,19 +75,17 @@ def machin_pi(terms):
     return 16 * arctan(1/5, terms) - 4 * arctan(1/239, terms)
 
 def chudnovsky_pi(terms):
-    C = 426880 * mp.sqrt(10005)
-    M = 1
-    L = 13591409
-    X = 1
-    K = 6
-    S = L
-    for i in range(1, terms):
-        M = (M * (K ** 3 - 16 * K)) // (i ** 3)
-        L += 545140134
-        X *= -262537412640768000
-        S += (M * L) / X
-        K += 12
-    return C / S
+    total = mp.mpf(0)
+    for k in range(terms):
+        num = mp.factorial(6*k) * (545140134 * k + 13591409)
+        denom = (
+            mp.factorial(3*k)
+            * mp.factorial(k)**3
+            * (-640320) ** (3 * k)
+        )
+        total += num / denom
+    pi = (426880 * mp.sqrt(10005)) / total
+    return pi
 
 def monte_carlo_pi(samples):
     inside = 0
